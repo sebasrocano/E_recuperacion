@@ -54,3 +54,35 @@ def avgyear(city, my_csv, year_c="1910"):
                                   "\nDesviación Estandar:",d_year,  
                                   "\n# Registro:",cityyear[city][year][2])
                 
+# Funcion de infección por semanas
+def avgbiweeks(city, my_csv, biweek_c="20"):
+    """
+    función para extraer el valor promedio de infectados
+    """  
+    citybiweek = {}
+    for line in my_csv:
+        mycity = line['loc']
+        biweek = line['biweek']
+        pop = float(line['pop'])
+        if line ['cases'] != "NA":
+            case = float(line['cases'])
+            citybiweek[mycity] = citybiweek.get (mycity, {})
+            citybiweek[mycity][biweek] = citybiweek[mycity].get(biweek, [0,0,0,[]])
+            citybiweek[mycity][biweek][0] = citybiweek[mycity][biweek][0] + pop
+            citybiweek[mycity][biweek][1] = citybiweek[mycity][biweek][1] + case
+            citybiweek[mycity][biweek][2] = citybiweek[mycity][biweek][2] + 1
+            citybiweek[mycity][biweek][3].append(case)
+    
+    for keys in citybiweek.keys():
+        if keys == city:
+            for key in citybiweek[city].keys():
+                if key == biweek_c:
+                    avg_biweek = 100000*citybiweek[city][biweek][1] / citybiweek[city][biweek][0]
+                    d_biweek = statistics.stdev(citybiweek[city][biweek][3])
+                    
+                    return print ("Ciudad:",keys, 
+                                  "\nSemana",":",key,  
+                                  "\nPromedio:",avg_biweek, 
+                                  "\nDesviación Estandar:",d_biweek,  
+                                  "\n# Registro:",citybiweek[city][biweek][2])
+    
